@@ -10,6 +10,14 @@ int factorial(int n) {
 	return n * factorial(n - 1);
 }
 
+int calcRows(int* arr, int rowMax, int boardsize) {
+	int val = 0;
+	cout << boardsize << endl;
+	for (int i = 2; i <= rowMax; i++)
+		val += (arr[i] * factorial(boardsize - i) / ((i == 2) ? 2 : 1));
+	return val;
+}
+
 int findConRows(vector<int>* vec, int groupNum) {
 
 	int* rArr = new int[groupNum + 1];
@@ -28,7 +36,7 @@ int findConRows(vector<int>* vec, int groupNum) {
 		}
 		rArr[i] = count;
 	}
-	return (rArr[2] * factorial(8 - 2)) / 2 + (rArr[3] * factorial(8 - 3));
+	return calcRows(rArr, groupNum, vec->size());
 }
 
 int Test(vector<int>* board) {
