@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -9,20 +10,30 @@ int factorial(int n) {
 	return n * factorial(n - 1);
 }
 
-int findConRows(int ind, int* arr, int size) {
-	for (int i = 0; i < size; i++) {
-		if (arr[ind] == arr[i] - 1) {
-			for (int j = 0; j < size; j++) {
-				if (arr[i] == arr[j] - 1)
-					return (factorial(size - 2)) + (factorial(size - 3) / 2);
-			}
-			return (factorial(size - 2) / 2);
+int findConRows(vector<int>* vec, int groupNum) {
+	int trips = 0;
+	int dubs = 0;
+	int* rArr = new int[groupNum + 1];
+	rArr[0] = 0;
+	rArr[1] = 0;
+	sort(vec->begin(), vec->end());
+
+	for (int i = 2; i < groupNum; i++) {
+
+	}
+
+	for (int i = 0; i < 8 - 1; i++) {
+		if (vec->at(i) == vec->at(i + 1) - 1) {
+			dubs++;
+			if (vec->at(i) == vec->at(i + 2) - 2)
+				trips++;
 		}
 	}
-	return 0;
+
+	return (dubs * factorial(8 - 2))/2 + (trips * factorial(8 - 3));
 }
 
-int bruteforce(int* board) {
+int bruteforce(vector<int>* board) {
 	int rows = 0;
 	for (int a = 0; a < 8; a++) {
 		for (int b = 0; b < 8; b++) {
@@ -39,11 +50,13 @@ int bruteforce(int* board) {
 													if (g != a && g != b && g != c && g != d && g != e && g != f) {
 														for (int h = 0; h < 8; h++) {
 															if (h != a && h != b && h != c && h != d && h != e && h != f && h != g) {
-																if (board[a] == board[b] - 1 && board[b] == board[c] - 1) {
+																if (board->at(a) == board->at(b) - 1 && board->at(b) == board->at(c) - 1) {
 																	rows++;
-																} else if (board[d] == board[e] - 1 && board[e] == board[f] - 1) {
+																} 
+																else if (board->at(d) == board->at(e) - 1 && board->at(e) == board->at(f) - 1) {
 																	rows++;
-																} else if (board[g] == board[h] - 1) {
+																} 
+																else if (board->at(g) == board->at(h) - 1) {
 																	rows++;
 																}
 															}
@@ -66,14 +79,10 @@ int bruteforce(int* board) {
 
 int main() {
 	int array_size = 8;
-	int* board = new int[array_size] { 1, 18, 6, 7, 8, 9, 16, 13};
-	int rowNum = 0;
+	vector<int>* board = new vector<int> { 1, 18, 6, 7, 8, 9, 16, 13};
+	int rowNum = findConRows(board, 3);
 
-	for (int i = 0; i < array_size; i++) {
-		rowNum += findConRows(i, board, array_size);
-	}
 
-	;
 	cout << rowNum << endl;
 	cout << bruteforce(board) << endl;
 }
