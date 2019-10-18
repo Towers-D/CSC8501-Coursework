@@ -1,6 +1,6 @@
 #include "Puzzle.h"
 
-Puzzle::Puzzle(int size = 3) {
+Puzzle::Puzzle(int size) {
 	rowColSize = size;
 	//-1 for Blank space
 	boardSpaces = (rowColSize * rowColSize) - 1;
@@ -38,4 +38,10 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 Puzzle::~Puzzle() {
 	delete[] results;
 	results = nullptr;
+}
+
+void Puzzle::genPuzzle() {
+	int arr[8] = { 1, 18, 6, 7, 8, 9, 16, 13 };
+	for (int i = 0; i < board.size() - 1; i++)
+		board.at(i) = arr[i];
 }

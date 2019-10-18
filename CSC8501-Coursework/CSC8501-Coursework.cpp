@@ -58,12 +58,13 @@ int Test(vector<int>* board) {
 
 int main() {
 	int array_size = 8;
-	Puzzle three = Puzzle(3);
+	//Puzzle three = Puzzle(3);
 	vector<int>* board = new vector<int>{ 1, 18, 6, 7, 8, 9, 16, 13 };
+	//vector<int>* board = new vector<int>{ 1, 2, 3, 4, 5, 6, 11, 17 };
 	int* results = findConRows(board, 3);
 	for (int i = 0; i < 4; i++)
 		cout << results[i] << " ";
-	//cout << rowNum << endl;
+	cout << calcFullRows(results, 3, 8)  << endl;
 	cout << Test(board) << endl;
 }
 
