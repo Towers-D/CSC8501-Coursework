@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <math.h>
 
 using namespace std;
 
@@ -10,15 +11,16 @@ int factorial(int n) {
 	return n * factorial(n - 1);
 }
 
-int calcRows(int* arr, int rowMax, int boardsize) {
+int calcFullRows(int* arr, int rowMax, int boardsize) {
+	int numRows = sqrt(boardsize + 1);
 	int val = 0;
 	cout << boardsize << endl;
 	for (int i = 2; i <= rowMax; i++)
-		val += (arr[i] * factorial(boardsize - i) / ((i == 2) ? 2 : 1));
+		val += (arr[i] * factorial(boardsize - i) / 2) * ((i == numRows - 1) ? 1 : numRows - 1);
 	return val;
 }
 
-int findConRows(vector<int>* vec, int groupNum) {
+int* findConRows(vector<int>* vec, int groupNum) {
 
 	int* rArr = new int[groupNum + 1];
 	sort(vec->begin(), vec->end());
@@ -36,7 +38,7 @@ int findConRows(vector<int>* vec, int groupNum) {
 		}
 		rArr[i] = count;
 	}
-	return calcRows(rArr, groupNum, vec->size());
+	return rArr;
 }
 
 int Test(vector<int>* board) {
@@ -56,10 +58,10 @@ int Test(vector<int>* board) {
 int main() {
 	int array_size = 8;
 	vector<int>* board = new vector<int>{ 1, 18, 6, 7, 8, 9, 16, 13 };
-	int rowNum = findConRows(board, 3);
-
-
-	cout << rowNum << endl;
+	int* results = findConRows(board, 3);
+	for (int i = 0; i < 4; i++)
+		cout << results[i] << " ";
+	//cout << rowNum << endl;
 	cout << Test(board) << endl;
 }
 
