@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include "Puzzle.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ int factorial(int n) {
 }
 
 int calcFullRows(int* arr, int rowMax, int boardsize) {
-	int numRows = sqrt(boardsize + 1);
+	int numRows = (int) sqrt(boardsize + 1);
 	int val = 0;
 	cout << boardsize << endl;
 	for (int i = 2; i <= rowMax; i++)
@@ -57,6 +58,7 @@ int Test(vector<int>* board) {
 
 int main() {
 	int array_size = 8;
+	Puzzle three = Puzzle(3);
 	vector<int>* board = new vector<int>{ 1, 18, 6, 7, 8, 9, 16, 13 };
 	int* results = findConRows(board, 3);
 	for (int i = 0; i < 4; i++)
