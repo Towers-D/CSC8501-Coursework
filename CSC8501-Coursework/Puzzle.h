@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,10 +14,18 @@ public:
 	~Puzzle();
 
 	void genPuzzle();
+	unsigned long long calcComRows();
+
 protected:
 	int* results;
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
+
+	void countComRows();
+	void clearResults();
+
+	int getResultFor(int ind);
+	void setResultAt(int ind, int val);
 };
 

@@ -1,46 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include "Puzzle.h"
 
 using namespace std;
 
-int factorial(int n) {
+//Functions used by class, but not apart of object
+int factoriall(int n) {
 	if (n == 1)
 		return 1;
-	return n * factorial(n - 1);
+	return n * factoriall(n - 1);
 }
 
-int calcFullRows(int* arr, int rowMax, int boardsize) {
-	int numRows = (int) sqrt(boardsize + 1);
-	int val = 0;
-	cout << boardsize << endl;
-	for (int i = 2; i <= rowMax; i++)
-		val += (arr[i] * factorial(boardsize - i) / 2) * ((i == numRows - 1) ? 1 : numRows - 1);
-	return val;
-}
-
-int* findConRows(vector<int>* vec, int groupNum) {
-
-	int* rArr = new int[groupNum + 1];
-	sort(vec->begin(), vec->end());
-
-	for (int i = 2; i <= groupNum; i++) {
-		int count = 0;
-		for (int j = 0; j < vec->size() - i; j++) {
-			int check = 0;
-			for (int x = 0; x < i; x++) {
-				if (vec->at(j) == vec->at(j + x) - x)
-					check++;
-			}
-			if (check == i)
-				count++;
-		}
-		rArr[i] = count;
-	}
-	return rArr;
-}
 
 int Test(vector<int>* board) {
 	int trips = 0;
@@ -48,23 +20,23 @@ int Test(vector<int>* board) {
 	for (int i = 0; i < board->size() - 1; i++) {
 		if (board->at(i) == board->at(i + 1) - 1) {
 			dubs++;
-			if (board->at(i) == board->at(i + 2) - 2)
+			if (i != board->size() - 2 && board->at(i) == board->at(i + 2) - 2)
 				trips++;
 		}
 	}
 
-	return (dubs * factorial(8 - 2)) / 2 + (trips * factorial(8 - 3));
+	return (dubs * factoriall(8 - 2)) / 2 + (trips * factoriall(8 - 3));
 }
 
 int main() {
 	int array_size = 8;
-	//Puzzle three = Puzzle(3);
-	vector<int>* board = new vector<int>{ 1, 18, 6, 7, 8, 9, 16, 13 };
-	//vector<int>* board = new vector<int>{ 1, 2, 3, 4, 5, 6, 11, 17 };
-	int* results = findConRows(board, 3);
-	for (int i = 0; i < 4; i++)
-		cout << results[i] << " ";
-	cout << calcFullRows(results, 3, 8)  << endl;
-	cout << Test(board) << endl;
+	Puzzle three = Puzzle(4);
+	three.genPuzzle();
+	//vector<int>* board = new vector<int>{ 1, 18, 6, 7, 8, 9, 16, 13 };
+	//vector<int>* board = new vector<int>{ 1, 2, 3, 4, 5, 6, 7, 8, };
+	vector<int>* board = new vector<int>{ 4, 19, 12, 6, 18, 3, 17, 10, 2, 9, 16, 5, 15, 11, 7 };
+	cout << "Object: " << three.calcComRows()  << endl;
+	cout << "Old Method: " << Test(board) << endl;
+
 }
 
