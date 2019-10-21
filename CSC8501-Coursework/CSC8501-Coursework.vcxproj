@@ -157,6 +157,9 @@
   <ItemGroup>
     <ClInclude Include="Puzzle.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="15-File" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

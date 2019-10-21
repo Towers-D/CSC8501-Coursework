@@ -14,10 +14,13 @@ public:
 	Puzzle(vector<int> config);
 	Puzzle(const Puzzle &copy);
 	Puzzle& operator=(const Puzzle& rhs);
+	friend ostream& operator<<(ostream& ostr, const Puzzle& p);
+	//friend istream& operator>>(istream& ostr, Puzzle& p);
 	~Puzzle();
 
 	void genPuzzle();
 	unsigned long long calcComRows();
+	vector<int> getBoard() const;
 
 protected:
 	int* results;
@@ -31,4 +34,3 @@ protected:
 	int getResultFor(int ind);
 	void setResultAt(int ind, int val);
 };
-

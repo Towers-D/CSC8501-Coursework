@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include "Puzzle.h"
 
 using namespace std;
@@ -53,27 +54,37 @@ vector<int> manual() {
 	return config;
 }
 
+void saveConfigurations(vector<Puzzle> vec) {
+	const string CON_FILE = "15-File";
+	//const string RES_FILE = "Solution-File";
+	ofstream output(CON_FILE.c_str());
+	output << vec.size() << endl;
+	for (Puzzle p : vec) {
+		output << p << "\n" << endl;
+	}
+	output.close();
+}
+
 int main() {
-	Puzzle p;
+	vector<Puzzle> vec;
 	char choice;
+	int num = 1;
 	cout << "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles?: ";
 	cin >> choice;
 	if (choice == 'm')
-		p = Puzzle(manual());
+		vec.push_back(Puzzle(manual()));
 	else {
-		int num;
-		Puzzle** arr;
 		cout << "How many puzzles would you like to generate?: ";
 		cin >> num;
-		arr = new Puzzle*[num];
 		for (int i = 0; i < num; i++) {
-			arr[i] = new Puzzle(4);
-			arr[i]->genPuzzle();
+			vec.at(i) = Puzzle(4);
+			vec.at(i).genPuzzle();
 		}
 	}
 
+	cout << "Saving Configuration" << endl;
+	saveConfigurations(vec);
 
-
-	cout << "Object: " << p.calcComRows()  << endl;
+	//cout << "Object: " << p.calcComRows()  << endl;
 }
 

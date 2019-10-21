@@ -54,6 +54,18 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 	return *this;
 }
 
+ostream& operator<<(ostream& ostr, const Puzzle& p) {
+	vector<int> board = p.getBoard();
+	for (int i = 1; i <= (int)board.size(); i++) {
+		ostr << board.at(i - 1);
+		if (i % 4 == 0)
+			ostr << endl;
+		else
+			ostr << "\t";
+	}
+	return ostr;
+}
+
 Puzzle::~Puzzle() {
 	delete[] results;
 	results = nullptr;
@@ -72,7 +84,6 @@ void Puzzle::genPuzzle() {
 		board.at(i) = range.at(rnd);
 		range.erase(range.begin() + rnd);
 	}
-		
 }
 
 unsigned long long Puzzle::calcComRows() {
@@ -83,8 +94,11 @@ unsigned long long Puzzle::calcComRows() {
 	return val;
 }
 
-//Protected Functions
+vector<int> Puzzle::getBoard() const {
+	return board;
+}
 
+//Protected Functions
 void Puzzle::countComRows() {
 	this->clearResults();
 	sort(board.begin(), board.end());
