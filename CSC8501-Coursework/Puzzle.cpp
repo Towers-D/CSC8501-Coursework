@@ -55,14 +55,7 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 }
 
 ostream& operator<<(ostream& ostr, const Puzzle& p) {
-	vector<int> board = p.getBoard();
-	for (int i = 1; i <= (int)board.size(); i++) {
-		ostr << board.at(i - 1);
-		if (i % 4 == 0)
-			ostr << endl;
-		else
-			ostr << "\t";
-	}
+	ostr << p.boardString();
 	return ostr;
 }
 
@@ -77,7 +70,6 @@ void Puzzle::genPuzzle() {
 	vector<int> range;
 	for (int i = 1; i <= 20; i++)
 		range.push_back(i);
-	srand(time(0));
 	
 	for (int i = 0; i < board.size(); i++) {
 		int rnd = (rand() % range.size());
@@ -86,16 +78,45 @@ void Puzzle::genPuzzle() {
 	}
 }
 
-unsigned long long Puzzle::calcComRows() {
+unsigned long long Puzzle::calcConRows() {
 	this->countComRows();
 	unsigned long long val = 0;
 	for (int i = rowColSize - 1; i <= rowColSize; i++)
 		val += (getResultFor(i) * factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1);
-	return val;
+	finResult = val;
+	return finResult;
 }
 
 vector<int> Puzzle::getBoard() const {
 	return board;
+}
+
+unsigned long long Puzzle::getResult() {
+	if (finResult == 0)
+		finResult = calcConRows();
+	return finResult;
+}
+
+string Puzzle::boardString() const {
+	string boardStr = "";
+	for (int i = 1; i <= board.size(); i++) {
+		boardStr += to_string(board.at(i - 1));
+		if (i % 4 == 0)
+			boardStr += "\n";
+		else
+			boardStr += "\t";
+	}
+	return boardStr;
+}
+
+string Puzzle::resultString() {
+	string resStr = boardString();
+	unsigned long long res = getResult();
+	resStr += ("\nrow = " + to_string(res) + "\n");
+	resStr += ("column = " + to_string(res) + "\n");
+	resStr += ("reverse row = " + to_string(res) + "\n");
+	resStr += ("reverse column = " + to_string(res) + "\n\n");
+	return resStr;
 }
 
 //Protected Functions

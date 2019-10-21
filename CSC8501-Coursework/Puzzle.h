@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <string>
 #include <ctime>
 
 using namespace std;
@@ -19,14 +20,19 @@ public:
 	~Puzzle();
 
 	void genPuzzle();
-	unsigned long long calcComRows();
+	unsigned long long calcConRows();
 	vector<int> getBoard() const;
+
+	unsigned long long getResult();
+	string boardString() const ;
+	string resultString();
 
 protected:
 	int* results;
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
+	unsigned long long finResult = 0;
 
 	void countComRows();
 	void clearResults();
