@@ -59,11 +59,20 @@ Puzzle::~Puzzle() {
 	results = nullptr;
 }
 
+//int arr[8] = { 1, 18, 6, 7, 8, 9, 16, 13 };
+//int arr[15] = { 4, 19, 12, 6, 18, 3, 17, 10, 2, 9, 16, 5, 15, 11, 7 };
 void Puzzle::genPuzzle() {
-	//int arr[8] = { 1, 18, 6, 7, 8, 9, 16, 13 };
-	int arr[15] = { 4, 19, 12, 6, 18, 3, 17, 10, 2, 9, 16, 5, 15, 11, 7 };
-	for (int i = 0; i < board.size(); i++)
-		board.at(i) = arr[i];
+	vector<int> range;
+	for (int i = 1; i <= 20; i++)
+		range.push_back(i);
+	srand(time(0));
+	
+	for (int i = 0; i < board.size(); i++) {
+		int rnd = (rand() % range.size());
+		board.at(i) = range.at(rnd);
+		range.erase(range.begin() + rnd);
+	}
+		
 }
 
 unsigned long long Puzzle::calcComRows() {
@@ -80,8 +89,6 @@ void Puzzle::countComRows() {
 	this->clearResults();
 	sort(board.begin(), board.end());
 
-	for (int i : board)
-		cout << i << endl;
 	for (int i = 2; i <= rowColSize; i++) {
 		for (int j = 0; j < boardSpaces; j++) {
 			int check = 0;

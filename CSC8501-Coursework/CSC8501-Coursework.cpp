@@ -31,7 +31,7 @@ int factoriall(int n) {
 //	return (dubs * factoriall(8 - 2)) / 2 + (trips * factoriall(8 - 3));
 //}
 
-vector<int> checkEntry() {
+vector<int> manual() {
 	cout << "Please Enter in 15 Numbers (1-20) to make up your configuration" << endl;
 	vector<int> config = vector<int>();
 	int x;
@@ -54,7 +54,23 @@ vector<int> checkEntry() {
 }
 
 int main() {
-	Puzzle p = Puzzle(checkEntry());
+	Puzzle p;
+	char choice;
+	cout << "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles?: ";
+	cin >> choice;
+	if (choice == 'm')
+		p = Puzzle(manual());
+	else {
+		int num;
+		Puzzle** arr;
+		cout << "How many puzzles would you like to generate?: ";
+		cin >> num;
+		arr = new Puzzle*[num];
+		for (int i = 0; i < num; i++) {
+			arr[i] = new Puzzle(4);
+			arr[i]->genPuzzle();
+		}
+	}
 
 
 
