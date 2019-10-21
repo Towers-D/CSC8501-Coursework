@@ -65,21 +65,46 @@ void saveConfigurations(vector<Puzzle> vec) {
 	output.close();
 }
 
+vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
+	const string CON_FILE = "15-File";
+	ifstream input(CON_FILE.c_str());
+	vector<int> temp;
+	int buff;
+	int num;
+	input >> num;
+	for (int i = 0; i < num; i++) {
+		for (int j = 0; j < 15; j++) {
+			input >> buff;
+			temp.push_back(buff);
+		}
+		vec.push_back(Puzzle(temp));
+		temp.clear();
+	}
+	return vec;
+}
+
 int main() {
 	vector<Puzzle> vec;
 	char choice;
 	int num = 1;
-	cout << "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles?: ";
+	cout << "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles or load (l) from file?: ";
 	cin >> choice;
-	if (choice == 'm')
-		vec.push_back(Puzzle(manual()));
-	else {
-		cout << "How many puzzles would you like to generate?: ";
-		cin >> num;
-		for (int i = 0; i < num; i++) {
-			vec.at(i) = Puzzle(4);
-			vec.at(i).genPuzzle();
-		}
+	switch (choice){
+		case ('m'):
+			vec.push_back(Puzzle(manual()));
+			break;
+		case ('r'):
+			cout << "How many puzzles would you like to generate?: ";
+			cin >> num;
+			for (int i = 0; i < num; i++) {
+				vec.at(i) = Puzzle(4);
+				vec.at(i).genPuzzle();
+			}
+
+			break;
+		case ('l'):
+			vec = loadConfigurations(vec);
+			break;
 	}
 
 	cout << "Saving Configuration" << endl;
@@ -87,4 +112,3 @@ int main() {
 
 	//cout << "Object: " << p.calcComRows()  << endl;
 }
-
