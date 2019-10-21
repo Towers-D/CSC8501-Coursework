@@ -21,6 +21,16 @@ Puzzle::Puzzle(int size) {
 		board.push_back(0);
 }
 
+Puzzle::Puzzle(vector<int> config) {
+	rowColSize = sqrt(config.size() + 1);
+	boardSpaces = config.size();
+	results = new int[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		results[i] = 0;
+	for (int i : config)
+		board.push_back(i);
+}
+
 Puzzle::Puzzle(const Puzzle &rhs) {
 	rowColSize = rhs.rowColSize;
 	boardSpaces = rhs.boardSpaces;
