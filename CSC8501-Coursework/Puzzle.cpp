@@ -19,6 +19,7 @@ Puzzle::Puzzle(int size) {
 		results[i] = 0;
 	for (int i = 0; i < boardSpaces; i++)
 		board.push_back(0);
+	wildCard = 0;
 }
 
 Puzzle::Puzzle(vector<int> config) {
@@ -29,6 +30,7 @@ Puzzle::Puzzle(vector<int> config) {
 		results[i] = 0;
 	for (int i : config)
 		board.push_back(i);
+	wildCard = 0;
 }
 
 Puzzle::Puzzle(const Puzzle &rhs) {
@@ -39,6 +41,7 @@ Puzzle::Puzzle(const Puzzle &rhs) {
 		results[i] = rhs.results[i];
 	for (int i : rhs.board)
 		board.push_back(i);
+	wildCard = rhs.wildCard;
 }
 
 Puzzle& Puzzle::operator=(const Puzzle& rhs) {
@@ -51,6 +54,7 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 		board.push_back(0);
 	for (int i = 0; i < rowColSize - 1; ++i)
 		results[i] = rhs.results[i];
+	wildCard = rhs.wildCard;
 	return *this;
 }
 
@@ -64,8 +68,6 @@ Puzzle::~Puzzle() {
 	results = nullptr;
 }
 
-//int arr[8] = { 1, 18, 6, 7, 8, 9, 16, 13 };
-//int arr[15] = { 4, 19, 12, 6, 18, 3, 17, 10, 2, 9, 16, 5, 15, 11, 7 };
 void Puzzle::genPuzzle() {
 	vector<int> range;
 	for (int i = 1; i <= 20; i++)
@@ -81,7 +83,7 @@ void Puzzle::genPuzzle() {
 unsigned long long Puzzle::calcConRows() {
 	this->countComRows();
 	unsigned long long val = 0;
-	for (int i = rowColSize - 1; i <= rowColSize; i++)
+	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++)
 		val += (getResultFor(i) * factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1);
 	finResult = val;
 	return finResult;
@@ -117,6 +119,14 @@ string Puzzle::resultString() {
 	resStr += ("reverse row = " + to_string(res) + "\n");
 	resStr += ("reverse column = " + to_string(res) + "\n\n");
 	return resStr;
+}
+
+void Puzzle::setWildCard(bool b) {
+	this->wildCard = b;
+}
+
+bool Puzzle::getWildCard() {
+	return wildCard;
 }
 
 //Protected Functions

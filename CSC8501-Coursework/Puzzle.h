@@ -26,13 +26,17 @@ public:
 	unsigned long long getResult();
 	string boardString() const ;
 	string resultString();
+	void setWildCard(bool b);
+	bool getWildCard();
 
+	
 protected:
 	int* results;
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
 	unsigned long long finResult = 0;
+	bool wildCard = false;
 
 	void countComRows();
 	void clearResults();
