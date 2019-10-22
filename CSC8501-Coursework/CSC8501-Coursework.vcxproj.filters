@@ -31,5 +31,8 @@
     <None Include="15-File">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Solution-File">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="15-File" />
+    <None Include="Solution-File" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
