@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include "Puzzle.h"
+#include <limits.h>
 
 using namespace std;
 
@@ -85,7 +86,7 @@ vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
 	int num;
 	input >> num;
 	for (int i = 0; i < num; i++) {
-		for (int j = 0; j < 15; j++) {
+		for (int j = 0; j < 24; j++) {
 			input >> buff;
 			temp.push_back(buff);
 		}
@@ -97,6 +98,7 @@ vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
 
 vector<Puzzle> checkEntry(vector<Puzzle> vec) {
 	int num = 1;
+	int dim = 1;
 	char* opt = new char[3]{ 'm', 'r', 'l' };
 	string msg = "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles or load (l) from file?: ";
 	char choice = charIn(msg, opt, 3);
@@ -106,8 +108,9 @@ vector<Puzzle> checkEntry(vector<Puzzle> vec) {
 			break;
 		case ('r'):
 			num = intInInc("How many puzzles would you like to generate?: ", 1, 20);
+			dim = intInInc("How large would you like the Puzzle (x by x) x = ", 3, 10);
 			for (int i = 0; i < num; i++) {
-				vec.push_back(Puzzle(4));
+				vec.push_back(Puzzle(dim));
 				vec.at(i).genPuzzle();
 			}
 			break;
@@ -121,7 +124,7 @@ vector<Puzzle> checkEntry(vector<Puzzle> vec) {
 void boardToScreen(vector<Puzzle> vec) {
 	cout << vec.size() << endl;
 	for (Puzzle p : vec)
-		cout << p << endl;
+		cout << p << "\n" << endl;
 }
 
 void saveConFunction(vector<Puzzle> vec) {

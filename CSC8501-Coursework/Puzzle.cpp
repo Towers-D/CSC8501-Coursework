@@ -2,9 +2,10 @@
 
 //Functions used by class, but not apart of object
 unsigned long long factorial(int n) {
-	if (n == 1)
-		return 1;
-	return n * factorial(n - 1);
+	unsigned long long val = n;
+	for (int i = n - 1; i > 0; i--)
+		val *= i;
+	return val;
 }
 
 
@@ -70,7 +71,7 @@ Puzzle::~Puzzle() {
 
 void Puzzle::genPuzzle() {
 	vector<int> range;
-	for (int i = 1; i <= 20; i++)
+	for (int i = 1; i <= ((rowColSize * rowColSize) + rowColSize); i++)
 		range.push_back(i);
 	
 	for (int i = 0; i < board.size(); i++) {
@@ -83,8 +84,10 @@ void Puzzle::genPuzzle() {
 unsigned long long Puzzle::calcConRows() {
 	this->countComRows();
 	unsigned long long val = 0;
-	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++)
-		val += (getResultFor(i) * factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1);
+	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++) {
+		val += (getResultFor(i) * (factorial(boardSpaces - i)/2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
+		cout << getResultFor(i) << " * ((" << boardSpaces - i << "!/2) * " << ((i == rowColSize - 1) ? 1 : rowColSize - 1) << " = " << getResultFor(i) * (factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1) << endl;
+	}
 	finResult = val;
 	return finResult;
 }
@@ -103,7 +106,7 @@ string Puzzle::boardString() const {
 	string boardStr = "";
 	for (int i = 1; i <= board.size(); i++) {
 		boardStr += to_string(board.at(i - 1));
-		if (i % 4 == 0)
+		if (i % rowColSize == 0)
 			boardStr += "\n";
 		else
 			boardStr += "\t";
@@ -143,6 +146,10 @@ void Puzzle::countComRows() {
 			if (check == i - 1)
 				setResultAt(i, getResultFor(i) + 1);
 		}
+	}
+
+	for (int i = 2; i <= rowColSize; i++) {
+		cout << "Groups of " << i << ": " << getResultFor(i) << endl;
 	}
 }
 
