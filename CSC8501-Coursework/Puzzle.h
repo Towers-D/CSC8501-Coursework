@@ -22,24 +22,29 @@ public:
 
 	void genPuzzle();
 	unsigned long long calcConRows();
+	void calcParRows();
 	vector<int> getBoard() const;
 
 	unsigned long long getResult();
 	string boardString() const ;
 	string resultString();
+	string parString();
 	void setWildCard(bool b);
 	bool getWildCard();
 
 	
 protected:
 	int* results;
+	unsigned long long * parArr;
+	unsigned long long* givPar;
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
+	vector<int> sortedBoard; // assign
 	unsigned long long finResult = 0;
 	bool wildCard = false;
-
-	void countComRows();
+	void countGroups();
+	void countUnOrded();
 	void clearResults();
 
 	int getResultFor(int ind);

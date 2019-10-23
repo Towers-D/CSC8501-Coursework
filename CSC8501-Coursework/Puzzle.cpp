@@ -18,6 +18,12 @@ Puzzle::Puzzle(int size) {
 	results = new int[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = 0;
+	parArr = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		parArr[i] = 0;
+	givPar = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		givPar[i] = 0;
 	for (int i = 0; i < boardSpaces; i++)
 		board.push_back(0);
 	wildCard = 0;
@@ -29,6 +35,12 @@ Puzzle::Puzzle(vector<int> config) {
 	results = new int[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = 0;
+	parArr = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		parArr[i] = 0;
+	givPar = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		givPar[i] = 0;
 	for (int i : config)
 		board.push_back(i);
 	wildCard = 0;
@@ -40,6 +52,12 @@ Puzzle::Puzzle(const Puzzle &rhs) {
 	results = new int[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = rhs.results[i];
+	parArr = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		parArr[i] = rhs.parArr[i];
+	givPar = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		givPar[i] = rhs.givPar[i];
 	for (int i : rhs.board)
 		board.push_back(i);
 	wildCard = rhs.wildCard;
@@ -50,11 +68,17 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 	delete[] results;
 	rowColSize = rhs.rowColSize;
 	boardSpaces = rhs.boardSpaces;
-	results = new int[rowColSize - 1];
 	for (int i = 0; i < boardSpaces; i++)
 		board.push_back(0);
+	results = new int[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; ++i)
 		results[i] = rhs.results[i];
+	parArr = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; ++i)
+		parArr[i] = rhs.parArr[i];
+	givPar = new unsigned long long[rowColSize - 1];
+	for (int i = 0; i < rowColSize - 1; i++)
+		givPar[i] = rhs.givPar[i];
 	wildCard = rhs.wildCard;
 	return *this;
 }
@@ -66,7 +90,11 @@ ostream& operator<<(ostream& ostr, const Puzzle& p) {
 
 Puzzle::~Puzzle() {
 	delete[] results;
+	delete[] parArr;
+	delete[] givPar;
+	parArr = nullptr;
 	results = nullptr;
+	givPar = nullptr;
 }
 
 void Puzzle::genPuzzle() {
@@ -82,14 +110,22 @@ void Puzzle::genPuzzle() {
 }
 
 unsigned long long Puzzle::calcConRows() {
-	this->countComRows();
+	this->countGroups();
 	unsigned long long val = 0;
-	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++) {
+	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++)
 		val += (getResultFor(i) * (factorial(boardSpaces - i)/2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
-		cout << getResultFor(i) << " * ((" << boardSpaces - i << "!/2) * " << ((i == rowColSize - 1) ? 1 : rowColSize - 1) << " = " << getResultFor(i) * (factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1) << endl;
-	}
 	finResult = val;
 	return finResult;
+}
+
+void Puzzle::calcParRows() {
+	this->countGroups();
+	for (int i = 2; i <= rowColSize; i++) {
+		unsigned long long temp = getResultFor(i) * (factorial(boardSpaces - i)) / 2;
+		parArr[i - 2] = temp * ((rowColSize - i) * (rowColSize - 1));
+		if (i != rowColSize - 1)
+			parArr[i -2 ] += temp * ((rowColSize - (i + 1)));
+	}
 }
 
 vector<int> Puzzle::getBoard() const {
@@ -120,8 +156,21 @@ string Puzzle::resultString() {
 	resStr += ("\nrow = " + to_string(res) + "\n");
 	resStr += ("column = " + to_string(res) + "\n");
 	resStr += ("reverse row = " + to_string(res) + "\n");
-	resStr += ("reverse column = " + to_string(res) + "\n\n");
+	resStr += ("reverse column = " + to_string(res) + "\n");
 	return resStr;
+}
+
+string Puzzle::parString() {
+	string parStr = resultString();
+	parStr += "(total for row & colunm, including inverse, in this configuration)\n";
+	countUnOrded();
+	for (int i = 0; i < rowColSize - 1; i++)
+		parStr += to_string(i + 2) + " = " + to_string(givPar[i]) + "\n";
+	parStr += "(total for row and column, including inverse, for all valid turns)\n";
+	calcParRows();
+	for (int i = 0; i < rowColSize - 1; i++)
+		parStr += to_string(i + 2) + " = " + to_string(parArr[i]) + "\n";
+	return parStr;
 }
 
 void Puzzle::setWildCard(bool b) {
@@ -133,23 +182,40 @@ bool Puzzle::getWildCard() {
 }
 
 //Protected Functions
-void Puzzle::countComRows() {
+void Puzzle::countGroups() {
 	this->clearResults();
-	sort(board.begin(), board.end());
+	sortedBoard = board;
+	sort(sortedBoard.begin(), sortedBoard.end());
 
 	for (int i = 2; i <= rowColSize; i++) {
 		for (int j = 0; j < boardSpaces; j++) {
 			int check = 0;
 			for (int x = 1; x < i; x++)
-				if ((j + x) < (boardSpaces ) && board.at(j) == board.at(j + x) - x) 
+				if ((j + x) < (boardSpaces ) && sortedBoard.at(j) == sortedBoard.at(j + x) - x) 
 					check++;
 			if (check == i - 1)
 				setResultAt(i, getResultFor(i) + 1);
 		}
 	}
+}
 
+void Puzzle::countUnOrded() {
 	for (int i = 2; i <= rowColSize; i++) {
-		cout << "Groups of " << i << ": " << getResultFor(i) << endl;
+		for (int j = 0; j < boardSpaces; j++) {
+			int check = 0;
+			int inCheck = 0;
+			int colCheck = 0;
+			int inColCheck = 0;
+
+			for (int x = 1; x < i; x++) {
+				if ((j + x) < (boardSpaces) && board.at(j) == board.at(j + x) - x)
+					check++;
+				if (())
+			}
+					
+			if (check == i - 1)
+				givPar++;
+		}
 	}
 }
 

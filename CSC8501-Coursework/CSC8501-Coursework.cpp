@@ -71,11 +71,11 @@ vector<int> manual() {
 	return config;
 }
 
-void saveResults(vector<Puzzle> vec) {
+void saveResults(vector<Puzzle> vec, bool part) {
 	ofstream output(RES_FILE.c_str());
 	output << vec.size() << endl;
 	for (Puzzle p: vec)
-		output << p.resultString();
+		output << (part ? p.parString() : p.resultString()) << endl;
 	output.close();
 }
 
@@ -84,14 +84,17 @@ vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
 	vector<int> temp;
 	int buff;
 	int num;
+	int size;
 	input >> num;
+	
+	while(input >> buff)
+		temp.push_back(buff);
+	size = temp.size()/num;
+
 	for (int i = 0; i < num; i++) {
-		for (int j = 0; j < 24; j++) {
-			input >> buff;
-			temp.push_back(buff);
-		}
-		vec.push_back(Puzzle(temp));
-		temp.clear();
+		vector<int> newVec(temp.begin() + (i * size), temp.begin() + ((i + 1) * size));
+		vec.push_back(Puzzle(newVec));
+		
 	}
 	return vec;
 }
@@ -137,10 +140,10 @@ void saveConFunction(vector<Puzzle> vec) {
 	output.close();
 }
 
-void resToScreen(vector<Puzzle> vec) {
+void resToScreen(vector<Puzzle> vec, bool part) {
 	cout << vec.size() << endl;
 	for (Puzzle p : vec) {
-		cout << p.resultString() << endl;
+		cout << (part ? p.parString(): p.resultString()) << "\n" << endl;
 	}
 }
 
@@ -148,14 +151,15 @@ void saveResFunction(vector<Puzzle> vec) {
 	char* opt = new char[2]{ 'y', 'n' };
 	char contin = charIn("Would you like find the full continous rows, columns and inverses? (Y or N): ", opt, 2);
 	if (contin == 'y') {
-		char wild = charIn("Would you like the empty space to act as a wilcard (Y or N): ", opt, 2);
+		char wild = charIn("Would you like the empty space to act as a wilcard? (Y or N): ", opt, 2);
 		if (wild == 'y') {
 			for (int i = 0; i < vec.size(); i++)
 				vec.at(i).setWildCard(true);
 		}
-		resToScreen(vec);
+		char part = charIn("Would you like to calculate partial rows as well? (Y or N): ", opt, 2);
+		resToScreen(vec, part == 'y');
 		cout << "Saving Results" << endl;
-		saveResults(vec);
+		saveResults(vec, part == 'y');
 	}
 }
 
