@@ -6,6 +6,7 @@
 #include <fstream>
 #include "Puzzle.h"
 #include <limits.h>
+#include <filesystem>
 
 //@author: David Towers (160243066)
 
@@ -73,8 +74,17 @@ vector<int> manual() {
 	return config;
 }
 
-void saveResults(vector<Puzzle> vec, bool part) {
-	ofstream output(RES_FILE.c_str());
+void saveResults(vector<Puzzle> vec, bool part) throw (invalid_argument){
+	ofstream output;
+	char* invalidChars = new char[9]{ '\\', '/', '<', '>', '"', '|', ':', '?', '*' };
+	int inCh = RES_FILE.find(invalidChars, 0, 1);
+	if (inCh != -1)
+		throw (invalid_argument("Invalid Characters in filename: " + RES_FILE.substr(inCh, inCh + 1)));
+	output.open(RES_FILE.c_str());
+	if (output.fail()) {
+		throw (invalid_argument("file could not be created: " + RES_FILE));
+	}
+
 	output << vec.size() << endl;
 	for (Puzzle p: vec)
 		output << (part ? p.parString() : p.resultString()) << endl;
@@ -83,10 +93,14 @@ void saveResults(vector<Puzzle> vec, bool part) {
 
 vector<Puzzle> loadConfigurations(vector<Puzzle> vec) throw (invalid_argument) {
 	ifstream input;
-
+	char* invalidChars = new char[9]{ '\\', '/', '<', '>', '"', '|', ':', '?', '*' };
+	int inCh = CON_FILE.find(invalidChars, 0, 1);
+	if (inCh != -1)
+		throw (invalid_argument("Invalid Characters in filename: " + CON_FILE.substr(inCh, inCh + 1)));
 	input.open(CON_FILE.c_str());
 	if (input.fail())
 		throw (invalid_argument("no file exists " + CON_FILE));
+	
 	vector<int> temp;
 	int buff;
 	int num;
@@ -118,7 +132,7 @@ vector<Puzzle> checkEntry(vector<Puzzle> vec) throw (invalid_argument) {
 			break;
 		case ('r'):
 			num = intInInc("How many puzzles would you like to generate?: ", 1, 20);
-			dim = intInInc("How large would you like the Puzzle (x by x) x = ", 3, 10);
+			dim = intInInc("How large would you like the Puzzle (x by x) x = ", 3, 1000);
 			for (int i = 0; i < num; i++) {
 				vec.push_back(Puzzle(dim));
 				vec.at(i).genPuzzle();
@@ -141,10 +155,17 @@ void boardToScreen(vector<Puzzle> vec) {
 		cout << p << "\n" << endl;
 }
 
-void saveConFunction(vector<Puzzle> vec) {
+void saveConFunction(vector<Puzzle> vec) throw(invalid_argument) {
 	boardToScreen(vec);
 	cout << "Saving Configuration" << endl;
-	ofstream output(CON_FILE.c_str());
+	ofstream output;
+	char* invalidChars = new char[9]{ '\\', '/', '<', '>', '"', '|', ':', '?', '*' };
+	int inCh = CON_FILE.find(invalidChars, 0, 1);
+	if (inCh != -1)
+		throw (invalid_argument("Invalid Characters in filename: " + CON_FILE.substr(inCh, inCh + 1)));
+	output.open(CON_FILE.c_str());
+	if (output.fail())
+		throw (invalid_argument("file could not be created " + CON_FILE));
 	output << vec.size() << endl;
 	for (Puzzle p : vec)
 		output << p << "\n" << endl;
@@ -170,7 +191,12 @@ void saveResFunction(vector<Puzzle> vec) {
 		char part = charIn("Would you like to calculate partial rows as well? (Y or N): ", opt, 2);
 		resToScreen(vec, part == 'y');
 		cout << "Saving Results" << endl;
-		saveResults(vec, part == 'y');
+		try {
+			saveResults(vec, part == 'y');
+		} 
+		catch (...) {
+			throw;
+		}
 	}
 }
 
@@ -181,14 +207,13 @@ int main() {
 		srand(time(0));
 		try {
 			vec = checkEntry(vec);
+			saveConFunction(vec);
+			saveResFunction(vec);
 		}
 		catch (invalid_argument& iae) {
-			cout << "Unable to read file: " << iae.what() << endl;
+			cout << "Error Inputting/outputitng files: " << iae.what() << endl;
 			exit(1);
 		}
-		saveConFunction(vec);
-		saveResFunction(vec);
-
 		char* opt = new char[2]{ 'y', 'n' };
 		char choice = charIn("Would you like to restart the program? (Y or N): ", opt, 2);
 		if (choice == 'n')

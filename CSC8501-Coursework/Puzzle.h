@@ -13,7 +13,7 @@
 using namespace std;
 
 class Puzzle {
-	
+	std::mutex mMutex;
 public:
 	//Base Functions
 	Puzzle(int size = 4);
