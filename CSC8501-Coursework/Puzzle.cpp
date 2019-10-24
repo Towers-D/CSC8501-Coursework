@@ -1,11 +1,12 @@
 #include "Puzzle.h"
 
+//@author: David Towers (160243066)
+
 //Functions used by class, but not apart of object
-unsigned long long factorial(int n) {
-	unsigned long long val = n;
-	for (int i = n - 1; i > 0; i--)
-		val *= i;
-	return val;
+InfInt factorial(InfInt n) {
+	if (n == 1)
+		return 1;
+	return n * factorial(n - 1);
 }
 
 
@@ -15,13 +16,13 @@ Puzzle::Puzzle(int size) {
 	//-1 for Blank space
 	boardSpaces = (rowColSize * rowColSize) - 1;
 	//-1 as we never calculate contuous rows of size 1
-	results = new int[rowColSize - 1];
+	results = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = 0;
-	parArr = new unsigned long long[rowColSize - 1];
+	parArr = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		parArr[i] = 0;
-	givPar = new unsigned long long[rowColSize - 1];
+	givPar = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		givPar[i] = 0;
 	for (int i = 0; i < boardSpaces; i++)
@@ -32,13 +33,13 @@ Puzzle::Puzzle(int size) {
 Puzzle::Puzzle(vector<int> config) {
 	rowColSize = sqrt(config.size() + 1);
 	boardSpaces = config.size();
-	results = new int[rowColSize - 1];
+	results = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = 0;
-	parArr = new unsigned long long[rowColSize - 1];
+	parArr = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		parArr[i] = 0;
-	givPar = new unsigned long long[rowColSize - 1];
+	givPar = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		givPar[i] = 0;
 	for (int i : config)
@@ -49,13 +50,13 @@ Puzzle::Puzzle(vector<int> config) {
 Puzzle::Puzzle(const Puzzle &rhs) {
 	rowColSize = rhs.rowColSize;
 	boardSpaces = rhs.boardSpaces;
-	results = new int[rowColSize - 1];
+	results = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		results[i] = rhs.results[i];
-	parArr = new unsigned long long[rowColSize - 1];
+	parArr = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		parArr[i] = rhs.parArr[i];
-	givPar = new unsigned long long[rowColSize - 1];
+	givPar = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		givPar[i] = rhs.givPar[i];
 	for (int i : rhs.board)
@@ -70,13 +71,13 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 	boardSpaces = rhs.boardSpaces;
 	for (int i = 0; i < boardSpaces; i++)
 		board.push_back(0);
-	results = new int[rowColSize - 1];
+	results = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; ++i)
 		results[i] = rhs.results[i];
-	parArr = new unsigned long long[rowColSize - 1];
+	parArr = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; ++i)
 		parArr[i] = rhs.parArr[i];
-	givPar = new unsigned long long[rowColSize - 1];
+	givPar = new InfInt[rowColSize - 1];
 	for (int i = 0; i < rowColSize - 1; i++)
 		givPar[i] = rhs.givPar[i];
 	wildCard = rhs.wildCard;
@@ -109,9 +110,9 @@ void Puzzle::genPuzzle() {
 	}
 }
 
-unsigned long long Puzzle::calcConRows() {
+InfInt Puzzle::calcConRows() {
 	this->countGroups();
-	unsigned long long val = 0;
+	InfInt val = 0;
 	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++)
 		val += (getResultFor(i) * (factorial(boardSpaces - i)/2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
 	finResult = val;
@@ -121,7 +122,7 @@ unsigned long long Puzzle::calcConRows() {
 void Puzzle::calcParRows() {
 	this->countGroups();
 	for (int i = 2; i <= rowColSize; i++) {
-		unsigned long long temp = getResultFor(i) * (factorial(boardSpaces - i)) / 2;
+		InfInt temp = getResultFor(i) * (factorial(boardSpaces - i)) / 2;
 		parArr[i - 2] = (temp * ( (rowColSize - (i - 1)) * (rowColSize - 1)));
 		if (i != rowColSize)
 			parArr[i - 2 ] += temp * ((rowColSize -  (i - 1)) - 1);
@@ -132,7 +133,7 @@ vector<int> Puzzle::getBoard() const {
 	return board;
 }
 
-unsigned long long Puzzle::getResult() {
+InfInt Puzzle::getResult() {
 	if (finResult == 0)
 		finResult = calcConRows();
 	return finResult;
@@ -152,11 +153,11 @@ string Puzzle::boardString() const {
 
 string Puzzle::resultString() {
 	string resStr = boardString();
-	unsigned long long res = getResult();
-	resStr += ("\nrow = " + to_string(res) + "\n");
-	resStr += ("column = " + to_string(res) + "\n");
-	resStr += ("reverse row = " + to_string(res) + "\n");
-	resStr += ("reverse column = " + to_string(res) + "\n");
+	InfInt res = getResult();
+	resStr += ("\nrow = " + res.toString() + "\n");
+	resStr += ("column = " + res.toString() + "\n");
+	resStr += ("reverse row = " + res.toString() + "\n");
+	resStr += ("reverse column = " + res.toString() + "\n");
 	return resStr;
 }
 
@@ -165,11 +166,11 @@ string Puzzle::parString() {
 	parStr += "(total for row & colunm, including inverse, in this configuration)\n";
 	countUnOrded();
 	for (int i = 0; i < rowColSize - 1; i++)
-		parStr += to_string(i + 2) + " = " + to_string(givPar[i]) + "\n";
+		parStr += to_string(i + 2) + " = " + givPar[i].toString() + "\n";
 	parStr += "(total for row and column, including inverse, for all valid turns)\n";
 	calcParRows();
 	for (int i = 0; i < rowColSize - 1; i++)
-		parStr += to_string(i + 2) + " = " + to_string(parArr[i]) + "\n";
+		parStr += to_string(i + 2) + " = " + parArr[i].toString() + "\n";
 	return parStr;
 }
 
@@ -232,10 +233,10 @@ void Puzzle::clearResults() {
 	}
 }
 
-int Puzzle::getResultFor(int ind) {
+InfInt Puzzle::getResultFor(int ind) {
 	return results[ind - 2];
 }
 
-void Puzzle::setResultAt(int ind, int val) {
+void Puzzle::setResultAt(int ind, InfInt val) {
 	results[ind - 2] = val;
 }

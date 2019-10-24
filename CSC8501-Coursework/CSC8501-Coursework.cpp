@@ -7,10 +7,12 @@
 #include "Puzzle.h"
 #include <limits.h>
 
+//@author: David Towers (160243066)
+
 using namespace std;
 
-const string CON_FILE = "15-File";
-const string RES_FILE = "Solution-File";
+const string CON_FILE = "15-File.txt";
+const string RES_FILE = "Solution-File.txt";
 
 char charIn(string msg, char* options, int size){
 	char input;
@@ -21,7 +23,7 @@ char charIn(string msg, char* options, int size){
 		cin >> input;
 		bool match = false;
 		for (int i = 0; i < size; i++)
-			if (input == options[i])
+			if (std::tolower(input) == options[i])
 				match = true;
 		if (cin.fail() || !match) {
 			cin.clear();
@@ -79,8 +81,12 @@ void saveResults(vector<Puzzle> vec, bool part) {
 	output.close();
 }
 
-vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
-	ifstream input(CON_FILE.c_str());
+vector<Puzzle> loadConfigurations(vector<Puzzle> vec) throw (invalid_argument) {
+	ifstream input;
+
+	input.open(CON_FILE.c_str());
+	if (input.fail())
+		throw (invalid_argument("no file exists " + CON_FILE));
 	vector<int> temp;
 	int buff;
 	int num;
@@ -96,10 +102,11 @@ vector<Puzzle> loadConfigurations(vector<Puzzle> vec) {
 		vec.push_back(Puzzle(newVec));
 		
 	}
+	input.close();
 	return vec;
 }
 
-vector<Puzzle> checkEntry(vector<Puzzle> vec) {
+vector<Puzzle> checkEntry(vector<Puzzle> vec) throw (invalid_argument) {
 	int num = 1;
 	int dim = 1;
 	char* opt = new char[3]{ 'm', 'r', 'l' };
@@ -118,7 +125,11 @@ vector<Puzzle> checkEntry(vector<Puzzle> vec) {
 			}
 			break;
 		case ('l'):
-			vec = loadConfigurations(vec);
+			try {
+				vec = loadConfigurations(vec);
+			} catch (...) {
+				throw;
+			}
 			break;
 	}
 	return vec;
@@ -168,7 +179,13 @@ int main() {
 	while (repeat) {
 		vector<Puzzle> vec;
 		srand(time(0));
-		vec = checkEntry(vec);
+		try {
+			vec = checkEntry(vec);
+		}
+		catch (invalid_argument& iae) {
+			cout << "Unable to read file: " << iae.what() << endl;
+			exit(1);
+		}
 		saveConFunction(vec);
 		saveResFunction(vec);
 

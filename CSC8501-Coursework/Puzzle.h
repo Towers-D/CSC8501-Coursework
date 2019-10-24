@@ -5,6 +5,10 @@
 #include <cmath>
 #include <string>
 #include <ctime>
+//Library to handle Big Integers, credit to Sercan Tutar
+#include "../sercantutar-infint-fc767ed/InfInt.h"
+
+//@author: David Towers (160243066)
 
 using namespace std;
 
@@ -21,11 +25,11 @@ public:
 	~Puzzle();
 
 	void genPuzzle();
-	unsigned long long calcConRows();
+	InfInt calcConRows();
 	void calcParRows();
 	vector<int> getBoard() const;
 
-	unsigned long long getResult();
+	InfInt getResult();
 	string boardString() const ;
 	string resultString();
 	string parString();
@@ -34,20 +38,20 @@ public:
 
 	
 protected:
-	int* results;
-	unsigned long long * parArr;
-	unsigned long long* givPar;
+	InfInt* results;
+	InfInt* parArr;
+	InfInt* givPar;
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
 	vector<int> sortedBoard; // assign
-	unsigned long long finResult = 0;
+	InfInt finResult = 0;
 	bool wildCard = false;
 	void countGroups();
 	void countUnOrded();
 	void countUnRowCol(vector<int> vec);
 	void clearResults();
 
-	int getResultFor(int ind);
-	void setResultAt(int ind, int val);
+	InfInt getResultFor(int ind);
+	void setResultAt(int ind, InfInt val);
 };

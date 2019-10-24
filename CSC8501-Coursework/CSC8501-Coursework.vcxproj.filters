@@ -28,10 +28,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="15-File">
+    <None Include="15-File.txt">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Solution-File">
+    <None Include="Solution-File.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -158,8 +158,8 @@
     <ClInclude Include="Puzzle.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="15-File" />
-    <None Include="Solution-File" />
+    <None Include="15-File.txt" />
+    <None Include="Solution-File.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
