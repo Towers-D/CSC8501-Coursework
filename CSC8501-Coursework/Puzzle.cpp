@@ -3,10 +3,11 @@
 //@author: David Towers (160243066)
 
 //Functions used by class, but not apart of object
-InfInt factorial(InfInt n) {
-	if (n == 1)
-		return 1;
-	return n * factorial(n - 1);
+InfInt factorial(int n) {
+	InfInt val = 1;
+	for (int i = 0; i < n; i++)
+		val *= n - i;
+	return val;
 }
 
 

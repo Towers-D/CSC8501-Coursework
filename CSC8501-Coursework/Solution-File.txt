@@ -1,171 +1,201 @@
 10
-8	12	20	3
-1	4	10	2
-18	13	16	7
-14	6	17	
-row = 1257379200
-column = 1257379200
-reverse row = 1257379200
-reverse column = 1257379200
-(total for row & colunm, including inverse, in this configuration)
-2 = 2
-3 = 0
-4 = 0
-(total for row and column, including inverse, for all valid turns)
-2 = 308237529600
-3 = 8382528000
-4 = 59875200
-
-9	12	4	17
-1	18	15	8
-6	5	14	11
-16	19	10	
-row = 2215382400
-column = 2215382400
-reverse row = 2215382400
-reverse column = 2215382400
-(total for row & colunm, including inverse, in this configuration)
-2 = 2
-3 = 0
-4 = 0
-(total for row and column, including inverse, for all valid turns)
-2 = 376734758400
-3 = 13412044800
-4 = 299376000
-
-7	6	3	18
-12	15	10	5
-1	2	11	14
-16	17	13	
-row = 2514758400
-column = 2514758400
-reverse row = 2514758400
-reverse column = 2514758400
-(total for row & colunm, including inverse, in this configuration)
-2 = 4
-3 = 0
-4 = 0
-(total for row and column, including inverse, for all valid turns)
-2 = 410983372800
-3 = 15088550400
-4 = 359251200
-
-4	1	16	10
-7	20	18	3
-9	17	11	14
-5	6	15	
-row = 1916006400
-column = 1916006400
-reverse row = 1916006400
-reverse column = 1916006400
+12	30	17	4	29
+18	27	21	22	9
+7	5	25	3	15
+23	6	8	10	2
+28	24	14	19	
+row = 12407800241700864000
+column = 12407800241700864000
+reverse row = 12407800241700864000
+reverse column = 12407800241700864000
 (total for row & colunm, including inverse, in this configuration)
 2 = 1
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 342486144000
-3 = 11735539200
-4 = 239500800
+2 = 192204124449970913280000
+3 = 4649275737625559040000
+4 = 98532531331153920000
+5 = 1459741204905984000
 
-7	15	11	14
-18	9	3	10
-8	19	13	16
-5	2	6	
-row = 1975881600
-column = 1975881600
-reverse row = 1975881600
-reverse column = 1975881600
+1	10	19	21	29
+18	17	12	14	16
+25	2	8	20	11
+3	15	22	28	27
+6	30	24	5	
+row = 9731608032706560000
+column = 9731608032706560000
+reverse row = 9731608032706560000
+reverse column = 9731608032706560000
 (total for row & colunm, including inverse, in this configuration)
-2 = 0
+2 = 3
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 376734758400
-3 = 11735539200
-4 = 299376000
+2 = 181526117536083640320000
+3 = 3934002547221626880000
+4 = 76636413257564160000
+5 = 1216451004088320000
 
-14	9	20	6
-2	15	8	13
-10	5	18	19
-7	4	12	
-row = 2215382400
-column = 2215382400
-reverse row = 2215382400
-reverse column = 2215382400
+6	20	1	29	27
+7	24	9	19	11
+3	28	17	16	10
+13	26	12	30	8
+5	14	2	25	
+row = 15570572852330496000
+column = 15570572852330496000
+reverse row = 15570572852330496000
+reverse column = 15570572852330496000
 (total for row & colunm, including inverse, in this configuration)
-2 = 2
+2 = 1
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 376734758400
-3 = 13412044800
-4 = 299376000
+2 = 202882131363858186240000
+3 = 5006912332827525120000
+4 = 120428649404743680000
+5 = 2189611807358976000
 
-6	8	11	20
-5	2	19	10
-4	16	9	13
-3	15	18	
-row = 1616630400
-column = 1616630400
-reverse row = 1616630400
-reverse column = 1616630400
+22	18	14	11	9
+29	8	3	27	25
+17	24	13	10	1
+16	6	20	21	2
+19	26	7	5	
+row = 12407800241700864000
+column = 12407800241700864000
+reverse row = 12407800241700864000
+reverse column = 12407800241700864000
 (total for row & colunm, including inverse, in this configuration)
-2 = 4
+2 = 1
+3 = 0
+4 = 0
+5 = 0
+(total for row and column, including inverse, for all valid turns)
+2 = 192204124449970913280000
+3 = 4649275737625559040000
+4 = 98532531331153920000
+5 = 1459741204905984000
+
+13	4	29	3	25
+27	5	21	16	2
+6	11	20	28	22
+8	12	9	17	30
+7	1	14	26	
+row = 13867541446606848000
+column = 13867541446606848000
+reverse row = 13867541446606848000
+reverse column = 13867541446606848000
+(total for row & colunm, including inverse, in this configuration)
+2 = 1
+3 = 0
+4 = 0
+5 = 0
+(total for row and column, including inverse, for all valid turns)
+2 = 202882131363858186240000
+3 = 5006912332827525120000
+4 = 109480590367948800000
+5 = 1703031405723648000
+
+1	25	14	9	24
+15	29	7	23	6
+10	21	8	5	28
+17	22	4	20	11
+13	3	16	18	
+row = 16787023856418816000
+column = 16787023856418816000
+reverse row = 16787023856418816000
+reverse column = 16787023856418816000
+(total for row & colunm, including inverse, in this configuration)
+2 = 5
 3 = 2
 4 = 1
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 342486144000
-3 = 10059033600
-4 = 179625600
+2 = 202882131363858186240000
+3 = 5364548928029491200000
+4 = 131376708441538560000
+5 = 2189611807358976000
 
-2	11	16	14
-10	8	1	19
-15	17	6	4
-9	12	7	
-row = 1975881600
-column = 1975881600
-reverse row = 1975881600
-reverse column = 1975881600
+24	21	26	2	20
+8	1	16	19	3
+29	17	7	27	5
+25	14	6	4	15
+12	30	11	10	
+row = 9488317831888896000
+column = 9488317831888896000
+reverse row = 9488317831888896000
+reverse column = 9488317831888896000
 (total for row & colunm, including inverse, in this configuration)
-2 = 1
+2 = 5
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 342486144000
-3 = 11735539200
-4 = 299376000
+2 = 192204124449970913280000
+3 = 4291639142423592960000
+4 = 76636413257564160000
+5 = 973160803270656000
 
-7	6	9	19
-2	4	11	14
-12	1	3	10
-5	18	15	
-row = 1975881600
-column = 1975881600
-reverse row = 1975881600
-reverse column = 1975881600
+24	9	10	4	22
+19	15	28	13	16
+27	8	3	25	6
+18	1	21	29	20
+2	17	12	5	
+row = 11191349237612544000
+column = 11191349237612544000
+reverse row = 11191349237612544000
+reverse column = 11191349237612544000
 (total for row & colunm, including inverse, in this configuration)
-2 = 1
+2 = 3
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 376734758400
-3 = 11735539200
-4 = 299376000
+2 = 192204124449970913280000
+3 = 4291639142423592960000
+4 = 87584472294359040000
+5 = 1459741204905984000
 
-13	9	18	7
-1	4	6	14
-5	2	10	11
-19	20	17	
-row = 1317254400
-column = 1317254400
-reverse row = 1317254400
-reverse column = 1317254400
+14	27	30	17	8
+21	18	24	23	6
+28	1	22	13	12
+5	16	11	7	15
+4	3	19	9	
+row = 15327282651512832000
+column = 15327282651512832000
+reverse row = 15327282651512832000
+reverse column = 15327282651512832000
 (total for row & colunm, including inverse, in this configuration)
-2 = 2
+2 = 5
 3 = 0
 4 = 0
+5 = 0
 (total for row and column, including inverse, for all valid turns)
-2 = 342486144000
-3 = 8382528000
-4 = 119750400
+2 = 192204124449970913280000
+3 = 5006912332827525120000
+4 = 120428649404743680000
+5 = 1946321606541312000
+
+6	17	10	20	25
+22	4	27	24	2
+14	11	16	7	9
+19	3	15	8	5
+18	23	30	26	
+row = 19706506266230784000
+column = 19706506266230784000
+reverse row = 19706506266230784000
+reverse column = 19706506266230784000
+(total for row & colunm, including inverse, in this configuration)
+2 = 3
+3 = 0
+4 = 0
+5 = 0
+(total for row and column, including inverse, for all valid turns)
+2 = 213560138277745459200000
+3 = 6079822118433423360000
+4 = 153272826515128320000
+5 = 2676192208994304000
 
