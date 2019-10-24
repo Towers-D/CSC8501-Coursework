@@ -6,10 +6,10 @@
 #include <string>
 #include <ctime>
 
-
 using namespace std;
 
 class Puzzle {
+	
 public:
 	//Base Functions
 	Puzzle(int size = 4);
@@ -45,6 +45,7 @@ protected:
 	bool wildCard = false;
 	void countGroups();
 	void countUnOrded();
+	void countUnRowCol(vector<int> vec);
 	void clearResults();
 
 	int getResultFor(int ind);

@@ -122,9 +122,9 @@ void Puzzle::calcParRows() {
 	this->countGroups();
 	for (int i = 2; i <= rowColSize; i++) {
 		unsigned long long temp = getResultFor(i) * (factorial(boardSpaces - i)) / 2;
-		parArr[i - 2] = temp * ((rowColSize - i) * (rowColSize - 1));
-		if (i != rowColSize - 1)
-			parArr[i -2 ] += temp * ((rowColSize - (i + 1)));
+		parArr[i - 2] = (temp * ( (rowColSize - (i - 1)) * (rowColSize - 1)));
+		if (i != rowColSize)
+			parArr[i - 2 ] += temp * ((rowColSize -  (i - 1)) - 1);
 	}
 }
 
@@ -200,21 +200,28 @@ void Puzzle::countGroups() {
 }
 
 void Puzzle::countUnOrded() {
-	for (int i = 2; i <= rowColSize; i++) {
-		for (int j = 0; j < boardSpaces; j++) {
+	for (int i = 0; i < rowColSize; i ++) {
+		vector<int> row(board.begin() + (i * rowColSize), board.begin() + ((i * rowColSize) + rowColSize - ((i * rowColSize) + rowColSize > board.size() ? 1 : 0)));
+		countUnRowCol(row);
+		vector<int> column;
+		for (int j = i; j < board.size(); j += 4)
+			column.push_back(board.at(j));
+		countUnRowCol(column);
+	}
+}
+
+void Puzzle::countUnRowCol(vector<int> vec) {
+	for (int j = 1; j < rowColSize; j++) {
+		for (int k = 0; k < vec.size(); k++) {
 			int check = 0;
 			int inCheck = 0;
-			int colCheck = 0;
-			int inColCheck = 0;
-
-			for (int x = 1; x < i; x++) {
-				if ((j + x) < (boardSpaces) && board.at(j) == board.at(j + x) - x)
+			for (int x = 1; x <= j; x++)
+				if ((k + x) < vec.size() && vec.at(k) == vec.at(k + x) - x)
 					check++;
-				if (())
-			}
-					
-			if (check == i - 1)
-				givPar++;
+				else if ((k - x) >= 0 && vec.at(k) + x == vec.at(k - x))
+					inCheck++;
+			if (check == j || inCheck == j)
+				givPar[j - 1]++;
 		}
 	}
 }
