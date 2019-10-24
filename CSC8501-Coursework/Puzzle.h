@@ -5,15 +5,16 @@
 #include <cmath>
 #include <string>
 #include <ctime>
+#include <thread>
+#include <mutex>
 //Library to handle Big Integers, credit to Sercan Tutar
 #include "../sercantutar-infint-fc767ed/InfInt.h"
-
 //@author: David Towers (160243066)
 
 using namespace std;
 
 class Puzzle {
-	
+	mutex mmutex;
 public:
 	//Base Functions
 	Puzzle(int size = 4);
@@ -25,13 +26,13 @@ public:
 	~Puzzle();
 
 	void genPuzzle();
-	InfInt calcConRows();
+	InfInt calcConRows(bool threading);
 	void calcParRows();
 	vector<int> getBoard() const;
 
-	InfInt getResult();
+	InfInt getResult(bool threading);
 	string boardString() const ;
-	string resultString();
+	string resultString(bool threading);
 	string parString();
 	void setWildCard(bool b);
 	bool getWildCard();
@@ -41,10 +42,11 @@ protected:
 	InfInt* results;
 	InfInt* parArr;
 	InfInt* givPar;
+	void threadFunc(int i);
 	int rowColSize;
 	int boardSpaces;
 	vector<int> board;
-	vector<int> sortedBoard; // assign
+	vector<int> sortedBoard;
 	InfInt finResult = 0;
 	bool wildCard = false;
 	void countGroups();

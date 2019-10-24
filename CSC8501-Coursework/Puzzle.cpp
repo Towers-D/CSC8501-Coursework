@@ -11,6 +11,8 @@ InfInt factorial(InfInt n) {
 
 
 //Public Functions
+
+//Default Constructor
 Puzzle::Puzzle(int size) {
 	rowColSize = size;
 	//-1 for Blank space
@@ -30,6 +32,7 @@ Puzzle::Puzzle(int size) {
 	wildCard = 0;
 }
 
+//Parameterised Constructor
 Puzzle::Puzzle(vector<int> config) {
 	rowColSize = sqrt(config.size() + 1);
 	boardSpaces = config.size();
@@ -47,6 +50,7 @@ Puzzle::Puzzle(vector<int> config) {
 	wildCard = 0;
 }
 
+//Copy Constructor
 Puzzle::Puzzle(const Puzzle &rhs) {
 	rowColSize = rhs.rowColSize;
 	boardSpaces = rhs.boardSpaces;
@@ -64,6 +68,7 @@ Puzzle::Puzzle(const Puzzle &rhs) {
 	wildCard = rhs.wildCard;
 }
 
+//Assignment Operator
 Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 	if (this == &rhs) return (*this);
 	delete[] results;
@@ -84,11 +89,13 @@ Puzzle& Puzzle::operator=(const Puzzle& rhs) {
 	return *this;
 }
 
+//Output operator
 ostream& operator<<(ostream& ostr, const Puzzle& p) {
 	ostr << p.boardString();
 	return ostr;
 }
 
+//destructor
 Puzzle::~Puzzle() {
 	delete[] results;
 	delete[] parArr;
@@ -98,6 +105,7 @@ Puzzle::~Puzzle() {
 	givPar = nullptr;
 }
 
+//Randomly generates a puzzle of given size
 void Puzzle::genPuzzle() {
 	vector<int> range;
 	for (int i = 1; i <= ((rowColSize * rowColSize) + rowColSize); i++)
@@ -110,15 +118,32 @@ void Puzzle::genPuzzle() {
 	}
 }
 
-InfInt Puzzle::calcConRows() {
+//Function to apply threading to calculation
+void Puzzle::threadFunc(int i) {
+	lock_guard<mutex> guard(mmutex);
+	finResult += (getResultFor(i) * (factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
+}
+
+//Function to calculate full continuous rows
+InfInt Puzzle::calcConRows(bool threading) {
 	this->countGroups();
-	InfInt val = 0;
-	for (int i = rowColSize - (this->getWildCard() == 1 ? 1 : 0); i <= rowColSize; i++)
-		val += (getResultFor(i) * (factorial(boardSpaces - i)/2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
-	finResult = val;
+	int wild = (this->getWildCard() == 1 ? 1 : 0);
+	if (threading){
+		thread* t = new thread[1 + wild];
+		for (int i = 0; i < 1 + wild; i++)
+			t[i] = thread(&Puzzle::threadFunc, this, (rowColSize - wild) + i);
+		for (int i = 0; i < 1 + wild; i++)
+			t[i].join();
+	}
+	else {
+		for (int i = rowColSize - wild; i <= rowColSize; i++)
+			finResult += (getResultFor(i) * (factorial(boardSpaces - i) / 2) * ((i == rowColSize - 1) ? 1 : rowColSize - 1));
+	}
+
 	return finResult;
 }
 
+//Calculate partial rows
 void Puzzle::calcParRows() {
 	this->countGroups();
 	for (int i = 2; i <= rowColSize; i++) {
@@ -129,16 +154,18 @@ void Puzzle::calcParRows() {
 	}
 }
 
+//returns the current board configuration
 vector<int> Puzzle::getBoard() const {
 	return board;
 }
 
-InfInt Puzzle::getResult() {
-	if (finResult == 0)
-		finResult = calcConRows();
+//returns the number of rows that appear 
+InfInt Puzzle::getResult(bool threading) {
+	finResult = calcConRows(threading);
 	return finResult;
 }
 
+//outputs a string with the borad in the requested format
 string Puzzle::boardString() const {
 	string boardStr = "";
 	for (int i = 1; i <= board.size(); i++) {
@@ -151,9 +178,10 @@ string Puzzle::boardString() const {
 	return boardStr;
 }
 
-string Puzzle::resultString() {
+//returns results in form of string in the reuested format
+string Puzzle::resultString(bool threading) {
 	string resStr = boardString();
-	InfInt res = getResult();
+	InfInt res = getResult(threading);
 	resStr += ("\nrow = " + res.toString() + "\n");
 	resStr += ("column = " + res.toString() + "\n");
 	resStr += ("reverse row = " + res.toString() + "\n");
@@ -161,8 +189,9 @@ string Puzzle::resultString() {
 	return resStr;
 }
 
+//returns results including those of partials in format
 string Puzzle::parString() {
-	string parStr = resultString();
+	string parStr = resultString(true);
 	parStr += "(total for row & colunm, including inverse, in this configuration)\n";
 	countUnOrded();
 	for (int i = 0; i < rowColSize - 1; i++)
@@ -174,6 +203,7 @@ string Puzzle::parString() {
 	return parStr;
 }
 
+//getter and setter for wildcard bool
 void Puzzle::setWildCard(bool b) {
 	this->wildCard = b;
 }
@@ -183,6 +213,7 @@ bool Puzzle::getWildCard() {
 }
 
 //Protected Functions
+//counts the number or groups of incrementing numbers
 void Puzzle::countGroups() {
 	this->clearResults();
 	sortedBoard = board;
@@ -200,6 +231,7 @@ void Puzzle::countGroups() {
 	}
 }
 
+//seperates the unordered board into rows and columns
 void Puzzle::countUnOrded() {
 	for (int i = 0; i < rowColSize; i ++) {
 		vector<int> row(board.begin() + (i * rowColSize), board.begin() + ((i * rowColSize) + rowColSize - ((i * rowColSize) + rowColSize > board.size() ? 1 : 0)));
@@ -211,6 +243,7 @@ void Puzzle::countUnOrded() {
 	}
 }
 
+//Calculates number of groups that show up in given rows, and columns
 void Puzzle::countUnRowCol(vector<int> vec) {
 	for (int j = 1; j < rowColSize; j++) {
 		for (int k = 0; k < vec.size(); k++) {
@@ -227,12 +260,14 @@ void Puzzle::countUnRowCol(vector<int> vec) {
 	}
 }
 
+//clears the reulst array
 void Puzzle::clearResults() {
 	for (int i = 0; i < rowColSize - 1; i++) {
 		results[i] = 0;
 	}
 }
 
+//methods to access the function array more easily
 InfInt Puzzle::getResultFor(int ind) {
 	return results[ind - 2];
 }

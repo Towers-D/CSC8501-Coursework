@@ -12,9 +12,12 @@
 
 using namespace std;
 
+//Constants used by program
 const string CON_FILE = "15-File.txt";
 const string RES_FILE = "Solution-File.txt";
+char* OPT = new char[2]{ 'y', 'n' };
 
+//takes in options as characters
 char charIn(string msg, char* options, int size){
 	char input;
 	bool loop;
@@ -24,7 +27,7 @@ char charIn(string msg, char* options, int size){
 		cin >> input;
 		bool match = false;
 		for (int i = 0; i < size; i++)
-			if (std::tolower(input) == options[i])
+			if (tolower(input) == options[i])
 				match = true;
 		if (cin.fail() || !match) {
 			cin.clear();
@@ -35,9 +38,10 @@ char charIn(string msg, char* options, int size){
 			cout << "Invalid input, please enter either: " << validChars << endl;
 		}
 	} while (loop);	
-	return input;
+	return tolower(input);
 }
 
+//takes in options as ints
 int intInInc(string msg, int lowerBound, int upperBound) {
 	int input;
 	bool loop;
@@ -55,6 +59,7 @@ int intInInc(string msg, int lowerBound, int upperBound) {
 	return input;
 }
 
+//allows the user to enter a 4 x 4 manually
 vector<int> manual() {
 	cout << "Please Enter in 15 Numbers (1-20) to make up your configuration" << endl;
 	vector<int> config = vector<int>();
@@ -74,6 +79,7 @@ vector<int> manual() {
 	return config;
 }
 
+//save the results to a file
 void saveResults(vector<Puzzle> vec, bool part) throw (invalid_argument){
 	ofstream output;
 	char* invalidChars = new char[9]{ '\\', '/', '<', '>', '"', '|', ':', '?', '*' };
@@ -87,10 +93,11 @@ void saveResults(vector<Puzzle> vec, bool part) throw (invalid_argument){
 
 	output << vec.size() << endl;
 	for (Puzzle p: vec)
-		output << (part ? p.parString() : p.resultString()) << endl;
+		output << (part ? p.parString() : p.resultString(true)) << endl;
 	output.close();
 }
 
+//load configurations from file
 vector<Puzzle> loadConfigurations(vector<Puzzle> vec) throw (invalid_argument) {
 	ifstream input;
 	char* invalidChars = new char[9]{ '\\', '/', '<', '>', '"', '|', ':', '?', '*' };
@@ -120,12 +127,13 @@ vector<Puzzle> loadConfigurations(vector<Puzzle> vec) throw (invalid_argument) {
 	return vec;
 }
 
+//allows the user to decide how they want to make the puzzle
 vector<Puzzle> checkEntry(vector<Puzzle> vec) throw (invalid_argument) {
 	int num = 1;
 	int dim = 1;
-	char* opt = new char[3]{ 'm', 'r', 'l' };
+	char* opts = new char[3]{ 'm', 'r', 'l' };
 	string msg = "Would you like to manually (m) enter a puzzle or randomly (r) generate Puzzles or load (l) from file?: ";
-	char choice = charIn(msg, opt, 3);
+	char choice = charIn(msg, opts, 3);
 	switch (choice) {
 		case ('m'):
 			vec.push_back(Puzzle(manual()));
@@ -149,12 +157,14 @@ vector<Puzzle> checkEntry(vector<Puzzle> vec) throw (invalid_argument) {
 	return vec;
 }
 
+//prints board to screen
 void boardToScreen(vector<Puzzle> vec) {
 	cout << vec.size() << endl;
 	for (Puzzle p : vec)
 		cout << p << "\n" << endl;
 }
 
+//saves the configuration to file
 void saveConFunction(vector<Puzzle> vec) throw(invalid_argument) {
 	boardToScreen(vec);
 	cout << "Saving Configuration" << endl;
@@ -172,23 +182,24 @@ void saveConFunction(vector<Puzzle> vec) throw(invalid_argument) {
 	output.close();
 }
 
+//prints results to screen
 void resToScreen(vector<Puzzle> vec, bool part) {
 	cout << vec.size() << endl;
 	for (Puzzle p : vec) {
-		cout << (part ? p.parString(): p.resultString()) << "\n" << endl;
+		cout << (part ? p.parString(): p.resultString(true)) << "\n" << endl;
 	}
 }
 
+//allows the user to show and save results
 void saveResFunction(vector<Puzzle> vec) {
-	char* opt = new char[2]{ 'y', 'n' };
-	char contin = charIn("Would you like find the full continous rows, columns and inverses? (Y or N): ", opt, 2);
+	char contin = charIn("Would you like find the full continous rows, columns and inverses? (Y or N): ", OPT, 2);
 	if (contin == 'y') {
-		char wild = charIn("Would you like the empty space to act as a wilcard? (Y or N): ", opt, 2);
+		char wild = charIn("Would you like the empty space to act as a wilcard? (Y or N): ", OPT, 2);
 		if (wild == 'y') {
 			for (int i = 0; i < vec.size(); i++)
 				vec.at(i).setWildCard(true);
 		}
-		char part = charIn("Would you like to calculate partial rows as well? (Y or N): ", opt, 2);
+		char part = charIn("Would you like to calculate partial rows as well? (Y or N): ", OPT, 2);
 		resToScreen(vec, part == 'y');
 		cout << "Saving Results" << endl;
 		try {
@@ -197,6 +208,21 @@ void saveResFunction(vector<Puzzle> vec) {
 		catch (...) {
 			throw;
 		}
+	}
+}
+
+//tests how fast the threaded and unthreaded funtions are
+void speedTest(vector<Puzzle> vec) {
+	char race = charIn("Would you like to see if the threaded function is faster?: ", OPT, 2);
+	if (race == 'y') {
+		clock_t beginThread = clock();
+		vec.at(0).getResult(true);
+		clock_t endThread = clock();
+		clock_t beginUnThread = clock();
+		vec.at(0).getResult(false);
+		clock_t endUnThread = clock();
+		cout << "Threaded Function took " << double(endThread - beginThread) / CLOCKS_PER_SEC << endl;
+		cout << "Unthreaded Function took " << double(endUnThread - beginUnThread) / CLOCKS_PER_SEC << endl;
 	}
 }
 
@@ -215,6 +241,7 @@ int main() {
 			exit(1);
 		}
 		char* opt = new char[2]{ 'y', 'n' };
+		speedTest(vec);
 		char choice = charIn("Would you like to restart the program? (Y or N): ", opt, 2);
 		if (choice == 'n')
 			repeat = false;
